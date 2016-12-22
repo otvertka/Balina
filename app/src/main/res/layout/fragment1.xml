@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:orientation="vertical"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginBottom="4dp"
+android:background="#7700ff00">
+
+<ImageView
+    android:id="@+id/ic_launcher"
+    android:layout_width="60dp"
+    android:layout_height="60dp"
+    tools:src="@mipmap/ic_launcher"
+    android:layout_margin="10dp"
+    />
+
+
+<TextView
+    android:id="@+id/userFirstNameProfile"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:text="Dimasik"
+    android:textStyle="bold"
+    android:textColor="@color/colorPrimaryDark"
+    android:layout_alignBottom="@+id/ic_launcher"
+    android:layout_marginBottom="26dp"
+    android:layout_toEndOf="@+id/ic_launcher"
+    android:layout_toRightOf="@+id/ic_launcher" />
+
+</RelativeLayout>
