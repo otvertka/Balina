@@ -6,20 +6,23 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 
-public class ListCatalog extends Fragment {
+public class OfferCatalog extends Fragment {
 
     private static final String TAG = "myLogs";
 
     private Shop shop;
     private RecyclerView mRecyclerView;
+    private int mPosition;
 
-    public void setShopObject(Shop shop){
+    public void setShopObject(Shop shop, int position){
         this.shop = shop;
+        mPosition = position;
     }
 
     @Nullable
@@ -30,17 +33,17 @@ public class ListCatalog extends Fragment {
         return rootView;
     }
 
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //Log.d(TAG, "onActivityCreated ListCatalog...");
-
         MainActivity act = (MainActivity ) getActivity();
 
-        PostsAdapter mPostAdapter = new PostsAdapter(shop, act);
+        OfferAdapter mOfferAdapter = new OfferAdapter(shop, mPosition, act);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this.getActivity());
-        mRecyclerView.setAdapter(mPostAdapter);
+        mRecyclerView.setAdapter(mOfferAdapter);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
     }
 }

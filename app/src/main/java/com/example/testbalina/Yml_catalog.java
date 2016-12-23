@@ -1,5 +1,7 @@
 package com.example.testbalina;
 
+import android.net.Uri;
+
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -9,6 +11,7 @@ import org.simpleframework.xml.Root;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,9 +42,9 @@ class Shop{
 
     @Path("offers")
     @ElementList(inline = true)
-    private List<Offer> offers;
+    private ArrayList<Offer> offers;
 
-    public List<Offer> getOffers() {
+    public ArrayList<Offer> getOffers() {
         return offers;
     }
 
@@ -68,7 +71,7 @@ class Offer{
     @Attribute
     public int id;
 
-    @ElementMap(entry = "param", name = "name", attribute = true, inline = true, required = false)
+    @ElementMap(entry = "param", key = "name", attribute = true, inline = true, required = false)
     private Map<String, String> map;
 
     @Element
@@ -83,8 +86,8 @@ class Offer{
     @Element(required = false)
     private String description;
 
-    @Element
-    private URI picture;
+    @Element(required = false)
+    private String picture;
 
     @Element
     private int categoryId;
@@ -97,7 +100,7 @@ class Offer{
         return id;
     }
 
-    public Map<String, String> getMap() {
+    public Map<String, String> getParamMap() {
         return map;
     }
 
@@ -117,7 +120,7 @@ class Offer{
         return description;
     }
 
-    public URI getPicture() {
+    public String getPicture() {
         return picture;
     }
 }

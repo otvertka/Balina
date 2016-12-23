@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "myLogs";
 
+    FragmentTransaction fTrans;
+
     public RecyclerView recyclerView;
     public Yml_catalog catalog;
 
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity
 
     private Shop shop;
 
-    //public ListCatalog listCatalog;
+    public ListCatalog listCatalog;
     Category categoryMap;
     Map<Integer, String> map;
 
@@ -54,11 +56,6 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-           /* recyclerView = (RecyclerView) findViewById(R.id.posts_recycle_view);
-         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-            recyclerView.setLayoutManager(layoutManager);*/
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -72,18 +69,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        /*listCatalog = new ListCatalog();
-        FragmentTransaction fTrans = getFragmentManager().beginTransaction();
-        fTrans.add(R.id.frgmCont, listCatalog);
-        fTrans.commit();*/
-        /*try {
-            Log.d(TAG, "RESPONSE");
-            Response response = App.getInf().getData("ukAXxeJYZN").execute();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
         App.getInf().getData("ukAXxeJYZN").enqueue(new Callback<Yml_catalog>() {
             @Override
             public void onResponse(Call<Yml_catalog> call, Response<Yml_catalog> response) {
@@ -92,27 +77,12 @@ public class MainActivity extends AppCompatActivity
 
                     catalog = response.body();
                     shop = catalog.getShop();
-                    //categoryMap = shop.getCategoryMap();
-                    //map = categoryMap.getMap();
-
-                    //keyList = new ArrayList(map.keySet());
-
-                    /*PostsAdapter adapter = new PostsAdapter(keyList);
-                    recyclerView.setAdapter(adapter);*/
-                    ListCatalog listCatalog = new ListCatalog();
+                    listCatalog = new ListCatalog();
                     listCatalog.setShopObject(shop);
 
-
-                    /*listCatalog = new ListCatalog();
-
-                    Bundle bundle = new Bundle();
-                    bundle.putIntegerArrayList("lol", (ArrayList<Integer>) keyList);
-                    listCatalog.setArguments(bundle);*/
-
-                    FragmentTransaction fTrans = getFragmentManager().beginTransaction();
+                    fTrans = getFragmentManager().beginTransaction();
                     fTrans.add(R.id.frgmCont, listCatalog);
                     fTrans.commit();
-                    Log.d(TAG, "ListCatalog...");
 
                 } else {
                     int statusCode = response.code();
@@ -142,7 +112,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -177,5 +146,16 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void fragmentMethod(int position){
+
+        OfferCatalog listOffer = new OfferCatalog();
+        listOffer.setShopObject(shop, position);
+        fTrans = getFragmentManager().beginTransaction();
+        fTrans.replace(R.id.frgmCont, listOffer);
+        fTrans.addToBackStack(null);
+        fTrans.commit();
+
     }
 }

@@ -21,10 +21,12 @@ android:background="#7700ff00">
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     tools:text="Dimasik"
+    android:textSize="30sp"
     android:textStyle="bold"
     android:textColor="@color/colorPrimaryDark"
     android:layout_alignBottom="@+id/ic_launcher"
-    android:layout_marginBottom="26dp"
+    android:layout_marginLeft="30dp"
+    android:layout_marginBottom="13dp"
     android:layout_toEndOf="@+id/ic_launcher"
     android:layout_toRightOf="@+id/ic_launcher" />
 
