@@ -4,9 +4,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,19 +47,21 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolderOf
         return new ViewHolderOffer(mContext, LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment2, parent, false));
     }
 
+
     @Override
     public void onBindViewHolder(ViewHolderOffer holder, int position) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 
         } else {
             holder.getPost().setText(offers.get(position).getName());
-            holder.getWeight().setText( offers.get(position).getParamMap().get("Вес"));
+            holder.getWeight().setText(offers.get(position).getParamMap().get("Вес"));
             holder.getPrice().setText(offers.get(position).getPrice().toString());
 
             Picasso.with(context) //передаем контекст приложения
                     .load(Uri.parse(offers.get(position).getPicture()))
                     .into(holder.getImageView());
         }
+
     }
 
     @Override
@@ -66,6 +70,7 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolderOf
             return 0;
         } else return offers.size();
     }
+
 
     class ViewHolderOffer extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -100,6 +105,11 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolderOf
 
         @Override
         public void onClick(View view) {
+
+            Dialog dialog = new Dialog();
+            //dialog.cont.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setOffers(offers, getAdapterPosition(), context);
+            dialog.show(context.getFragmentManager(), "dialog");
 
         }
 
