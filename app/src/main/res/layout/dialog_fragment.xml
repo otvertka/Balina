@@ -3,18 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
 
     android:orientation="vertical"
     android:weightSum="1">
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         app:srcCompat="@mipmap/ic_launcher"
         android:id="@+id/image_offer_dialog"
 
-        android:layout_weight="0.2" />
+         />
 
     <TextView
         android:text="Название"
@@ -26,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/name_offer_dialog"
-        android:layout_weight="0.05" />
+         />
 
     <TextView
         android:text="Описание"
@@ -35,13 +34,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/description_offer_dialog"
-        android:layout_weight="0.20" />
+         />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
         <TextView
+            android:paddingLeft="2dp"
             android:text="Вес: "
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,6 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"        >
         <TextView
+            android:paddingLeft="2dp"
             android:text="Калорийность: "
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,6 +82,7 @@
         android:layout_height="wrap_content"        >
         <TextView
             android:text="Белки: "
+            android:paddingLeft="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/proteins" />
@@ -100,6 +102,8 @@
         android:layout_height="wrap_content"        >
         <TextView
             android:text="Жиры: "
+            android:paddingLeft="2dp"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/fats" />
@@ -121,6 +125,7 @@
             android:text="Углеводы: "
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="2dp"
             android:id="@+id/carbohydrates" />
         <TextView
             android:text="fats"
@@ -138,21 +143,27 @@
         android:layout_height="wrap_content"        >
 
         <TextView
+            android:layout_toLeftOf="@+id/price_offer_dialog"
+            android:layout_toStartOf="@+id/price_offer_dialog"
+
             android:text="Цена: "
-            android:gravity="end"
             android:textStyle="bold"
             android:textSize="15dp"
             android:textColor="#1b1818"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView2" />
+            android:id="@+id/price" />
 
         <TextView
+
+
             android:text="Price"
-            android:gravity="end"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:id="@+id/price_offer_dialog"
+            android:padding="2dp"
             android:layout_alignParentTop="true"
              />
     </RelativeLayout>
@@ -162,7 +173,7 @@
         android:onClick="close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="250dp"
+        android:layout_gravity="center"
         android:id="@+id/button_dialog"
         android:layout_weight="0.01" />
 

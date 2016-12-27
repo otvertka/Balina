@@ -1,9 +1,11 @@
 package com.example.testbalina;
 
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,6 +18,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Configuration;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,14 +30,21 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.R.attr.foreground;
 import static android.R.attr.fragment;
+import static android.R.attr.onClick;
 import static android.R.attr.value;
+import static com.example.testbalina.R.id.calorie;
+import static com.example.testbalina.R.id.carbohydrates;
+import static com.example.testbalina.R.id.fats;
+import static com.example.testbalina.R.id.proteins;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "myLogs";
+    int status = 1; // 1-online, 0 - offline
 
     FragmentTransaction fTrans;
 
@@ -66,6 +78,9 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        com.activeandroid.Configuration dbConfiguration = new Configuration.Builder(this).setDatabaseName("Balina.db").create();
+        ActiveAndroid.initialize(dbConfiguration);
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -79,6 +94,7 @@ public class MainActivity extends AppCompatActivity
                     shop = catalog.getShop();
                     listCatalog = new ListCatalog();
                     listCatalog.setShopObject(shop);
+                    listCatalog.setStatus(1);
 
                     fTrans = getFragmentManager().beginTransaction();
                     fTrans.add(R.id.frgmCont, listCatalog);
@@ -98,7 +114,6 @@ public class MainActivity extends AppCompatActivity
         });
 
     }
-
 
     @Override
     public void onBackPressed() {
@@ -126,10 +141,15 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_save){
+            saveCategories();
+            saveOffers();
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -138,7 +158,16 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_catalog) {
-            //
+
+            ListCatalog f = new ListCatalog();
+            status = 0;
+            f.setStatus(status); //0 - offline, 1 - online
+
+            fTrans = getFragmentManager().beginTransaction();
+            fTrans.replace(R.id.frgmCont, f);
+            fTrans.addToBackStack(null);
+            fTrans.commit();
+
         }  else if (id == R.id.nav_contacts) {
 
         }
@@ -148,14 +177,83 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    private void saveOffers() {
+        ActiveAndroid.beginTransaction();
+        try {
+                for (Offer list: shop.getOffers()
+                     ) {
+                    //Log.d(TAG, "saveOffers: " + list.getParamMap().get("Вес"));
+                    String weight = "";
+                    String calorie = "";
+                    String proteins = "";
+                    String fats = "";
+                    String carbohydrates = "";
+
+                    if (list.getParamMap() != null) {
+                        if (list.getParamMap().get("Вес") != null) {
+                            weight = list.getParamMap().get("Вес");
+                        }
+                        if (list.getParamMap().get("Каллорийность") != null) {
+                            calorie = list.getParamMap().get("Каллорийность");
+                        }
+                        if (list.getParamMap().get("Белки") != null) {
+                            proteins = list.getParamMap().get("Белки");
+                        }
+                        if (list.getParamMap().get("Жиры") != null) {
+                            fats = list.getParamMap().get("Жиры");
+                        }
+                        if (list.getParamMap().get("Углеводы") != null) {
+                            carbohydrates = list.getParamMap().get("Углеводы");
+                        }
+                    }
+
+                    Integer categoryId = list.getCategoryId();
+                    String name = list.getName();
+                    String description = list.getDescription();
+                    String picture = list.getPicture();
+                    Double price =  list.getPrice();
+
+                    Offers tableOffers = new Offers(categoryId , name , description,
+                            picture,     price ,   weight,
+                            calorie, proteins, fats, carbohydrates
+                            );
+                    tableOffers.save();
+                    //Log.d(TAG, "Offers " + tableOffers.getId());
+
+                }
+            ActiveAndroid.setTransactionSuccessful();
+        } finally {
+            ActiveAndroid.endTransaction();
+        }
+    }
+
+    private void saveCategories(){
+        ActiveAndroid.beginTransaction();
+        try {
+
+            for (Map.Entry<Integer, String> set: shop.getCategoryMap().getMap().entrySet()) {
+                Integer index = set.getKey();
+                String category = set.getValue();
+
+                Categories tableCategories = new Categories(index, category);
+                tableCategories.save();
+                //Log.d(TAG, "Categories " + tableCategories.getId());
+            }
+
+            ActiveAndroid.setTransactionSuccessful();
+        } finally {
+            ActiveAndroid.endTransaction();
+        }
+    }
+
     public void fragmentMethod(int position){
 
         OfferCatalog listOffer = new OfferCatalog();
-        listOffer.setShopObject(shop, position);
+        listOffer.setShopObject(shop, position, status);
         fTrans = getFragmentManager().beginTransaction();
         fTrans.replace(R.id.frgmCont, listOffer);
         fTrans.addToBackStack(null);
         fTrans.commit();
-
+        Log.d(TAG, "fragmentMethod " + position);
     }
 }

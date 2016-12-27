@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,24 +12,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
+public class CatalogAdapter extends RecyclerView.Adapter<CatalogAdapter.ViewHolder> {
 
     public static final String TAG = "myLogs";
     private Context mContext;
     private MainActivity context;
 
     private Shop mShop;
-    private Map<Integer, String> map;
+    private Map<Integer, String> map = new HashMap<>();
 
     private List keyList;
     Category categoryMap;
 
 
-    public PostsAdapter(Shop shop, MainActivity context)  {
+    public CatalogAdapter(Shop shop, MainActivity context)  {
 
         this.context = context;
         mShop = shop;
@@ -37,6 +39,19 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
         keyList = new ArrayList(map.keySet());
     }
+
+    public CatalogAdapter(List<Categories> listCategories, MainActivity context) {
+        this.context = context;
+        for (Categories ctg: listCategories
+             ) {
+            //Log.d(TAG, "CatalogAdapter..." + ctg.index + " " + ctg.category);
+            map.put(ctg.index, ctg.category);
+        }
+        keyList = new ArrayList(map.keySet());
+    }
+
+
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -93,6 +108,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     break;
                 }
             }
+            Log.d(TAG, "onClick... " + categoryId);
             context.fragmentMethod(categoryId);
         }
     }

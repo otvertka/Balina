@@ -2,6 +2,7 @@ package com.example.testbalina;
 
 import android.net.Uri;
 
+
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -34,9 +35,8 @@ public class Yml_catalog{
 }
 
 @Root(name="shop")
-class Shop{
+class Shop {
 
-    //@Path("categories")
     @Element(name = "categories")
     private Category categoryMap;
 
@@ -56,12 +56,22 @@ class Shop{
 @Root(name="categories")
 class Category{
 
-    @ElementMap(entry = "category", key = "id",attribute = true, inline = true)
-    private Map<Integer, String> map;
+    public Category(){}
+
+    public Category(Map<Integer, String> map){
+        setMap(map);
+    }
+
+    public void setMap(Map<Integer, String> map) {
+        this.map = map;
+    }
 
     public Map<Integer, String> getMap() {
         return map;
     }
+
+    @ElementMap(entry = "category", key = "id",attribute = true, inline = true)
+    private Map<Integer, String> map;
 }
 
 

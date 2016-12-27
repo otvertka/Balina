@@ -21,7 +21,9 @@ public class Dialog extends DialogFragment implements View.OnClickListener {
     private MainActivity context;
 
     private ArrayList<Offer> offers = new ArrayList<>();
+    private ArrayList<Offers> offersBd = new ArrayList<>();
     private int position;
+    private int status = 1;
 
     @Nullable
     @Override
@@ -41,25 +43,41 @@ public class Dialog extends DialogFragment implements View.OnClickListener {
 
         v.findViewById(R.id.button_dialog).setOnClickListener(this);
 
-        Picasso.with(context) //передаем контекст приложения
-                .load(Uri.parse(offers.get(position).getPicture()))
-                .into(imageView);
-        name.setText(offers.get(position).getName());
-        price.setText(offers.get(position).getPrice().toString());
-        description.setText(offers.get(position).getDescription());
-        weight.setText(offers.get(position).getParamMap().get("Вес"));
-        calorie.setText(offers.get(position).getParamMap().get("Калорийность"));
-        fats.setText(offers.get(position).getParamMap().get("Жиры"));
-        carbohydrates.setText(offers.get(position).getParamMap().get("Углеводы"));
-        proteins.setText(offers.get(position).getParamMap().get("Белки"));
+        if (status == 1) {
+            Picasso.with(context) //передаем контекст приложения
+                    .load(Uri.parse(offers.get(position).getPicture()))
+                    .into(imageView);
+            name.setText(offers.get(position).getName());
+            price.setText(offers.get(position).getPrice().toString());
+            description.setText(offers.get(position).getDescription());
+            weight.setText(offers.get(position).getParamMap().get("Вес"));
+            calorie.setText(offers.get(position).getParamMap().get("Каллорийность"));
+            fats.setText(offers.get(position).getParamMap().get("Жиры"));
+            carbohydrates.setText(offers.get(position).getParamMap().get("Углеводы"));
+            proteins.setText(offers.get(position).getParamMap().get("Белки"));
+        } else {
+            Picasso.with(context) //передаем контекст приложения
+                    .load(Uri.parse(offersBd.get(position).picture))
+                    .into(imageView);
+            name.setText(offersBd.get(position).name);
+            price.setText(offersBd.get(position).price.toString());
+            description.setText(offersBd.get(position).description);
+            weight.setText(offersBd.get(position).weight);
+            calorie.setText(offersBd.get(position).calorie);
+            fats.setText(offersBd.get(position).fats);
+            carbohydrates.setText(offersBd.get(position).carbohydrates);
+            proteins.setText(offersBd.get(position).proteins);
+        }
 
         return v;
     }
 
-    public void setOffers(ArrayList<Offer> offers, int position, MainActivity context){
+    public void setOffers(ArrayList<Offer> offers, ArrayList<Offers> offersBd, int position, MainActivity context, int status){
+        this.offersBd = offersBd;
         this.context = context;
         this.offers = offers;
         this.position = position;
+        this.status = status;
     }
 
     @Override

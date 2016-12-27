@@ -11,6 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.activeandroid.query.Select;
+
+import java.util.List;
+
 
 public class OfferCatalog extends Fragment {
 
@@ -19,8 +23,10 @@ public class OfferCatalog extends Fragment {
     private Shop shop;
     private RecyclerView mRecyclerView;
     private int mPosition;
+    private int status = 1;
 
-    public void setShopObject(Shop shop, int position){
+    public void setShopObject(Shop shop, int position, int status){
+        this.status = status;
         this.shop = shop;
         mPosition = position;
     }
@@ -39,7 +45,17 @@ public class OfferCatalog extends Fragment {
         super.onActivityCreated(savedInstanceState);
         MainActivity act = (MainActivity ) getActivity();
 
-        OfferAdapter mOfferAdapter = new OfferAdapter(shop, mPosition, act);
+        OfferAdapter mOfferAdapter;
+        if (status == 1){
+            Log.d(TAG, "OfferCatalog status(online) " + status);
+
+            mOfferAdapter = new OfferAdapter(shop, mPosition, act);
+        } else {
+            Log.d(TAG, "OfferCatalog status(offline) " + status);
+
+            List<Offers> listOffers = new Select().from(Offers.class).execute();
+            mOfferAdapter = new OfferAdapter(listOffers, mPosition, act);
+        }
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this.getActivity());
         mRecyclerView.setAdapter(mOfferAdapter);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);

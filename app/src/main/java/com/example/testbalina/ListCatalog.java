@@ -10,6 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.activeandroid.query.Select;
+
+import java.util.List;
+
 
 public class ListCatalog extends Fragment {
 
@@ -17,6 +21,11 @@ public class ListCatalog extends Fragment {
 
     private Shop shop;
     private RecyclerView mRecyclerView;
+    private int status = 1; //0 - offline, 1 - online
+
+    public void setStatus(int status){
+        this.status = status;
+    }
 
     public void setShopObject(Shop shop){
         this.shop = shop;
@@ -37,7 +46,13 @@ public class ListCatalog extends Fragment {
 
         MainActivity act = (MainActivity ) getActivity();
 
-        PostsAdapter mPostAdapter = new PostsAdapter(shop, act);
+        CatalogAdapter mPostAdapter;
+        List<Categories> listCategories = new Select().from(Categories.class).execute();
+        if (status == 1){
+            mPostAdapter = new CatalogAdapter(shop, act);
+        } else {
+            mPostAdapter = new CatalogAdapter(listCategories, act);
+        }
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this.getActivity());
         mRecyclerView.setAdapter(mPostAdapter);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
