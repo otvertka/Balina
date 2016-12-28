@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Configuration;
+import com.activeandroid.query.Select;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,6 +85,11 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        loading();
+
+    }
+
+    public void loading(){
         App.getInf().getData("ukAXxeJYZN").enqueue(new Callback<Yml_catalog>() {
             @Override
             public void onResponse(Call<Yml_catalog> call, Response<Yml_catalog> response) {
@@ -97,7 +103,7 @@ public class MainActivity extends AppCompatActivity
                     listCatalog.setStatus(1);
 
                     fTrans = getFragmentManager().beginTransaction();
-                    fTrans.add(R.id.frgmCont, listCatalog);
+                    fTrans.replace(R.id.frgmCont, listCatalog);
                     fTrans.commit();
 
                 } else {
@@ -108,11 +114,10 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<Yml_catalog> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "An error occurred during networking" , Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Нет подключения к интернету" , Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "statusCode_onFailure: " + t.getMessage());
             }
         });
-
     }
 
     @Override
@@ -142,8 +147,14 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_save){
-            saveCategories();
-            saveOffers();
+            if (catalog == null){
+                Toast.makeText(MainActivity.this, "Для сохранения подключитесь к интернету" , Toast.LENGTH_SHORT).show();
+            } else {
+                saveCategories();
+                saveOffers();
+            }
+        } else if (id == R.id.action_refresh){
+            loading();
         }
 
         return super.onOptionsItemSelected(item);
@@ -159,15 +170,22 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_catalog) {
 
-            ListCatalog f = new ListCatalog();
-            status = 0;
-            f.setStatus(status); //0 - offline, 1 - online
+            //Log.d(TAG, "ActiveAndroid.getDatabase(): " + ActiveAndroid.getDatabase());
+            //Log.d(TAG, "new Select().from(Categories.class).execute(): " + new Select().from(Categories.class).execute());
 
-            fTrans = getFragmentManager().beginTransaction();
-            fTrans.replace(R.id.frgmCont, f);
-            fTrans.addToBackStack(null);
-            fTrans.commit();
 
+            if (new Select().from(Categories.class).execute().size() == 0){
+                Toast.makeText(MainActivity.this, "Ничего не сохранено" , Toast.LENGTH_SHORT).show();
+            } else {
+                ListCatalog f = new ListCatalog();
+                status = 0;
+                f.setStatus(status); //0 - offline, 1 - online
+
+                fTrans = getFragmentManager().beginTransaction();
+                fTrans.replace(R.id.frgmCont, f);
+                fTrans.addToBackStack(null);
+                fTrans.commit();
+            }
         }  else if (id == R.id.nav_contacts) {
 
         }

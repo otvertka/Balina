@@ -11,4 +11,9 @@
         android:orderInCategory="100"
         android:title="Сохранить"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="10"
+        android:title="Обновить"
+        app:showAsAction="ifRoom" />
 </menu>
